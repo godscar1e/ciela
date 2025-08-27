@@ -2,12 +2,11 @@ import Image from 'next/image'
 import { templates } from '../../constants/templates'
 
 interface TemplatePageProps {
-	params: Promise<{ slug: string }>
+	params: { slug: string }
 }
 
-export default async function TemplatePage({ params }: TemplatePageProps) {
-	const resolvedParams = await params // Resolve the Promise
-	const template = templates.find(t => t.slug === resolvedParams.slug)
+export default function TemplatePage({ params }: TemplatePageProps) {
+	const template = templates.find(t => t.slug === params.slug)
 
 	if (!template) return <div>Template not found</div>
 
@@ -27,8 +26,8 @@ export default async function TemplatePage({ params }: TemplatePageProps) {
 	)
 }
 
-export async function generateStaticParams() {
+export function generateStaticParams() {
 	return templates.map(template => ({
-		slug: template.slug,
+		slug: String(template.slug), // 100% строка
 	}))
 }
